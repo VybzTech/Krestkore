@@ -29,7 +29,7 @@ export function Services() {
               <article
                 className={styles.card}
                 key={service.title}
-                style={{ animationDelay: `${index * 0.08}s` }}
+                style={{ '--reveal-delay': `${index * 0.08}s` } as React.CSSProperties}
               >
                 <div className={styles.accentBar} aria-hidden="true" />
                 <div className={styles.cardHeader}>

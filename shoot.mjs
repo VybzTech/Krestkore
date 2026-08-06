@@ -41,7 +41,7 @@ for (const theme of ['dark', 'light']) {
     // Scroll through the page so lazy reveals fire, then capture key sections.
     for (const id of ['services', 'testimonials', 'about', 'contact']) {
       await page.evaluate((sel) => document.getElementById(sel)?.scrollIntoView(), id)
-      await page.waitForTimeout(700)
+      await page.waitForTimeout(1600)
       await page.screenshot({ path: `${OUT}/${theme}-${vp.name}-${id}.png` })
     }
 

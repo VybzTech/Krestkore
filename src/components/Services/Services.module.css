@@ -1,3 +1,5 @@
+@import '../../styles/keyframes.css';
+
 .section {
   padding: var(--space-9) 0;
   position: relative;
@@ -47,13 +49,25 @@
   position: relative;
   overflow: hidden;
   transition: background 0.3s var(--ease-out-quart);
-  opacity: 0;
-  transform: translateY(30px);
 }
 
-/* Applied once the grid scrolls into view. */
-.revealed .card {
-  animation: fadeUp var(--dur-slow) var(--ease-out-expo) both;
+/*
+ * The card surface always paints, so an un-revealed grid reads as an empty
+ * card grid rather than a solid slab of the grid's hairline colour. Only the
+ * contents fade up. `--reveal-delay` is set per card and inherits down.
+ */
+.cardHeader,
+.cardTitle,
+.desc,
+.items {
+  opacity: 0;
+}
+
+.revealed .cardHeader,
+.revealed .cardTitle,
+.revealed .desc,
+.revealed .items {
+  animation: fadeUp var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0s) both;
 }
 
 .card:hover {

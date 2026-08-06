@@ -1,3 +1,5 @@
+@import '../../styles/keyframes.css';
+
 .nav {
   position: fixed;
   top: 0;
@@ -98,24 +100,26 @@
   width: 100%;
 }
 
-.cta {
+/* Scoped under .links so it outranks the `.links a` padding reset. */
+.links a.cta {
   display: inline-block;
   padding: 0.55rem 1.4rem;
   background: var(--accent);
-  color: var(--on-accent) !important;
+  color: var(--on-accent);
   border-radius: 4px;
-  font-weight: 700 !important;
-  font-size: 0.82rem !important;
+  font-weight: 700;
+  font-size: 0.82rem;
   transition:
     transform var(--dur-fast) ease,
     box-shadow var(--dur-fast) ease;
 }
 
-.cta::after {
-  display: none !important;
+.links a.cta::after {
+  display: none;
 }
 
-.cta:hover {
+.links a.cta:hover {
+  color: var(--on-accent);
   transform: translateY(-1px);
   box-shadow: 0 6px 24px rgb(var(--accent-rgb) / 0.35);
 }
@@ -193,10 +197,10 @@
     font-size: 1rem;
   }
 
-  .cta {
+  .links a.cta {
     width: 100%;
     text-align: center;
     padding: 0.8rem 1.4rem;
-    font-size: 0.9rem !important;
+    font-size: 0.9rem;
   }
 }

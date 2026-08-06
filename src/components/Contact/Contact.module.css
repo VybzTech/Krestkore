@@ -1,3 +1,5 @@
+@import '../../styles/keyframes.css';
+
 .section {
   padding: var(--space-9) 0;
   position: relative;
@@ -76,6 +78,7 @@ a.infoItem:hover .infoIcon {
 }
 
 .infoLabel {
+  display: block;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -85,6 +88,7 @@ a.infoItem:hover .infoIcon {
 }
 
 .infoValue {
+  display: block;
   font-size: var(--text-base);
   font-weight: 500;
   transition: color var(--dur-fast) ease;
