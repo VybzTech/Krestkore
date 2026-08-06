@@ -17,6 +17,7 @@ npm run dev        # http://localhost:5173
 | `npm run lint`      | ESLint                               |
 | `npm test`          | Vitest (single run)                  |
 | `npm run test:watch`| Vitest in watch mode                 |
+| `npm run design-check` | Playwright visual + a11y sweep (needs `npm run preview` running) |
 
 ## Where things live
 
@@ -73,6 +74,27 @@ silently never runs.
 **Any module that animates must `@import '../../styles/keyframes.css'`.** That
 gives the module its own scoped copy of the keyframes so the reference
 resolves. Do not move the keyframes back into `global.css`.
+
+## Design check
+
+`scripts/design-check.mjs` drives a real browser over both themes at three
+viewports, exercises hover/focus/menu/chat states, and fails loudly on console
+errors, viewport overflow, clipped hover targets, broken hand-off, and WCAG AA
+contrast misses.
+
+```bash
+npm run build && npm run preview      # one shell
+npm run design-check                  # another
+```
+
+It deliberately opens the mobile menu **after scrolling**, because the header
+only gains `backdrop-filter` once scrolled and that is what previously caused
+the drawer scrim to collapse to the height of the header.
+
+## Deploying
+
+`main` → Netlify preview, `prod` → the live domain. Full setup, including the
+Whogohost DNS step, is in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Legacy
 

@@ -38,7 +38,7 @@ export function About() {
           <h2 id="edge-heading" className={styles.title}>
             Three Pillars of
             <br />
-            <em>Uncompromising Excellence</em>
+            <em className="gradientText">Uncompromising Excellence</em>
           </h2>
           <div className={styles.pillars}>
             {pillars.map((pillar) => (
@@ -59,7 +59,7 @@ export function About() {
             <h2 className={styles.tribeTitle}>
               Young. Passionate.
               <br />
-              <em>Expert.</em>
+              <em className="gradientText">Expert.</em>
             </h2>
             <p className={styles.tribeDesc}>
               A dedicated collective of innovative product managers, engineers, developers, and

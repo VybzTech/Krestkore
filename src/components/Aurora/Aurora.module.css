@@ -1,0 +1,121 @@
+/*
+ * Keyframes are declared locally rather than imported: they are specific to
+ * this layer. CSS Modules hashes the declaration and the reference together,
+ * so a local @keyframes resolves correctly (a global one would not).
+ */
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* Fallback pointer position until the first mousemove. */
+  --mx: 50%;
+  --my: 30%;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.blobOne {
+  width: 46vw;
+  height: 46vw;
+  min-width: 380px;
+  min-height: 380px;
+  top: -14vw;
+  right: -8vw;
+  background: radial-gradient(circle, rgb(var(--accent-rgb) / 0.22) 0%, transparent 68%);
+  animation: driftOne 28s ease-in-out infinite;
+}
+
+.blobTwo {
+  width: 38vw;
+  height: 38vw;
+  min-width: 300px;
+  min-height: 300px;
+  top: 32vh;
+  left: -10vw;
+  background: radial-gradient(circle, var(--aurora-deep) 0%, transparent 70%);
+  animation: driftTwo 34s ease-in-out infinite;
+}
+
+.blobThree {
+  width: 30vw;
+  height: 30vw;
+  min-width: 260px;
+  min-height: 260px;
+  bottom: -8vw;
+  right: 18vw;
+  background: radial-gradient(circle, rgb(var(--accent-rgb) / 0.13) 0%, transparent 70%);
+  animation: driftThree 41s ease-in-out infinite;
+}
+
+/* Follows the pointer. Position comes from --mx/--my, written by rAF. */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    38vw circle at var(--mx) var(--my),
+    rgb(var(--accent-rgb) / 0.1) 0%,
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out-quart);
+}
+
+.spotlightOn {
+  opacity: 1;
+}
+
+/* Faint vignette keeps the blooms from washing out the page edges. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 0%, transparent 40%, var(--aurora-veil) 100%);
+}
+
+@keyframes driftOne {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-6vw, 5vh, 0) scale(1.12);
+  }
+}
+
+@keyframes driftTwo {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(7vw, -6vh, 0) scale(1.08);
+  }
+}
+
+@keyframes driftThree {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-5vw, -4vh, 0) scale(0.95);
+  }
+}
+
+/* Freeze the drift; the blooms stay as a static gradient field. */
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+    will-change: auto;
+  }
+  .spotlight {
+    display: none;
+  }
+}

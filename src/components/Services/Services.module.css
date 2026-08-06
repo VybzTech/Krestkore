@@ -70,8 +70,15 @@
   animation: fadeUp var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0s) both;
 }
 
-.card:hover {
+.card:hover,
+.card:focus-within {
   background: var(--surface);
+  /* Sits above its neighbours so the lift is not clipped by the next cell. */
+  z-index: 1;
+}
+
+.card:focus-within .accentBar {
+  opacity: 1;
 }
 
 .card:hover .accentBar {
@@ -114,7 +121,8 @@
 
 .card:hover .icon {
   border-color: var(--border-strong);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.06);
+  background: rgb(var(--accent-rgb) / 0.16);
 }
 
 .category {

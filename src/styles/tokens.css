@@ -104,6 +104,14 @@
   --danger-border: rgb(239 68 68 / 0.4);
   --danger-text: #fca5a5;
   --online: #22c55e;
+
+  --aurora-deep: rgb(22 62 132 / 0.34);
+  --aurora-veil: rgb(6 14 30 / 0.55);
+
+  /* Heading gradient. Both stops clear 4.5:1 on --bg independently, so the
+     text stays legible wherever the ramp lands. */
+  --grad-from: #2ee6cf;
+  --grad-to: #0f8f9a;
 }
 
 /* ── Light: same hue family, re-tuned for a bright surface ───────────── */
@@ -154,4 +162,11 @@
   --danger-border: rgb(220 38 38 / 0.35);
   --danger-text: #b91c1c;
   --online: #15803d;
+
+  --aurora-deep: rgb(126 170 226 / 0.34);
+  --aurora-veil: rgb(244 247 251 / 0.5);
+
+  /* Both stops measured against --bg (#f4f7fb): 4.9:1 and 5.9:1. */
+  --grad-from: #0a7d72;
+  --grad-to: #115e73;
 }

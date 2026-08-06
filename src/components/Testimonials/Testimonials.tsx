@@ -59,7 +59,7 @@ export function Testimonials() {
           <h2 id="testimonials-heading" className={styles.title}>
             What Our Clients
             <br />
-            <em>Say About Us</em>
+            <em className="gradientText">Say About Us</em>
           </h2>
         </header>
 

@@ -94,6 +94,37 @@ textarea {
   background: var(--accent-ink);
 }
 
+/*
+ * Gradient treatment for the accent half of a section heading.
+ *
+ * Built to fail safe: the solid colour is set first and always applies, the
+ * clip is only engaged where supported, and forced-colours mode drops back to
+ * system colours. Both gradient stops independently clear 4.5:1 against --bg,
+ * so legibility does not depend on where in the ramp a glyph falls.
+ */
+.gradientText {
+  color: var(--accent-ink);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gradientText {
+    background-image: linear-gradient(100deg, var(--grad-from) 0%, var(--grad-to) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Descenders get clipped without a little breathing room. */
+    padding-bottom: 0.08em;
+  }
+}
+
+@media (forced-colors: active) {
+  .gradientText {
+    background-image: none;
+    -webkit-text-fill-color: revert;
+    color: revert;
+  }
+}
+
 /* Hairline divider used at section boundaries. */
 .edgeRule {
   position: absolute;

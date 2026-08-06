@@ -1,4 +1,5 @@
 import { About } from './components/About/About'
+import { Aurora } from './components/Aurora/Aurora'
 import { ChatAgent } from './components/ChatAgent/ChatAgent'
 import { Contact } from './components/Contact/Contact'
 import { Footer } from './components/Footer/Footer'
@@ -14,6 +15,7 @@ export function App() {
       <a href="#main" className="skipLink">
         Skip to content
       </a>
+      <Aurora />
       <Navbar />
       <main id="main">
         <Hero />

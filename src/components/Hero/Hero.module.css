@@ -22,30 +22,6 @@
   pointer-events: none;
 }
 
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
-
-.orbOne {
-  width: 600px;
-  height: 600px;
-  top: -200px;
-  right: -100px;
-  background: radial-gradient(circle, var(--orb-accent) 0%, transparent 70%);
-  animation: floatBall 10s ease-in-out infinite;
-}
-
-.orbTwo {
-  width: 400px;
-  height: 400px;
-  bottom: -100px;
-  left: -50px;
-  background: radial-gradient(circle, var(--orb-deep) 0%, transparent 70%);
-}
-
 .scanLine {
   position: absolute;
   top: 30%;
@@ -57,6 +33,11 @@
   pointer-events: none;
 }
 
+/*
+ * width:100% is load-bearing. .hero is a flex column and .container carries
+ * `margin: 0 auto`; auto cross-axis margins suppress stretch, so without this
+ * the grid sizes itself to its content instead of the viewport.
+ */
 .inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -64,6 +45,7 @@
   gap: var(--space-8);
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 /* Without this a long unbreakable heading sets the column's min-content
@@ -72,14 +54,33 @@
   min-width: 0;
 }
 
+/*
+ * The headline is sized against this column, not the viewport. "Empowering"
+ * cannot wrap, so a vw-based clamp let the glyphs overflow the grid cell on
+ * 1024-1280px screens and collide with the floating cards. cqw ties the size
+ * to the actual column width, which is what has to contain it.
+ */
+.copy {
+  container-type: inline-size;
+}
+
 .title {
   font-family: var(--font-display);
-  font-size: var(--text-display-lg);
+  /* Floor is set by "Empowering" fitting a 320px viewport, the narrowest
+     phone still in use. */
+  font-size: clamp(1.55rem, 9.6cqw, 4.2rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
   margin-bottom: 1.6rem;
   text-wrap: balance;
+}
+
+/* Fallback for engines without container query units. */
+@supports not (font-size: 1cqw) {
+  .title {
+    font-size: var(--text-display-lg);
+  }
 }
 
 .title .line {

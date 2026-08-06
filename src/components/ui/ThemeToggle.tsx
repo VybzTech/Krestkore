@@ -6,7 +6,7 @@ import styles from './ThemeToggle.module.css'
  * Two-state theme switch. Exposed as a real switch to assistive tech, so the
  * current state is announced rather than inferred from the icon.
  */
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({ className }: { className?: string | undefined }) {
   const { theme, toggleTheme } = useTheme()
   const isLight = theme === 'light'
 

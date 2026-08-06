@@ -14,6 +14,14 @@ if (!window.matchMedia) {
   })) as unknown as typeof window.matchMedia
 }
 
+// jsdom implements neither scroll method; components use both.
+if (!Element.prototype.scrollTo) {
+  Element.prototype.scrollTo = () => {}
+}
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {}
+}
+
 if (!('IntersectionObserver' in window)) {
   // Reveals everything immediately so scroll-triggered content is assertable.
   class MockIntersectionObserver {

@@ -16,7 +16,7 @@ export function Services() {
           <h2 id="services-heading" className={styles.title}>
             Full-Spectrum
             <br />
-            <em>IT Solutions</em>
+            <em className="gradientText">IT Solutions</em>
           </h2>
           <p className={styles.sub}>
             We bridge the gap between complex technical requirements and real business outcomes.

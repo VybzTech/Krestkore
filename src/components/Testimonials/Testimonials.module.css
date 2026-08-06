@@ -24,12 +24,18 @@
 
 .carousel {
   position: relative;
-  overflow: hidden;
 }
 
+/*
+ * Clipping belongs on the track (which is what the off-screen slides need)
+ * rather than on .carousel. On .carousel it also clipped the controls below,
+ * cutting the bottom off the prev/next buttons when they scale on hover.
+ * Padding leaves room for that scale plus the focus ring.
+ */
 .track {
   position: relative;
   min-height: 340px;
+  overflow: hidden;
 }
 
 .slide {
@@ -136,6 +142,7 @@
   justify-content: center;
   gap: var(--space-5);
   margin-top: var(--space-6);
+  padding-block: 0.5rem;
 }
 
 .ctrlBtn {

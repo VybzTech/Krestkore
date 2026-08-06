@@ -57,6 +57,47 @@ CSS Modules rewrites every `animation-name` to a hashed, file-local name. A `*.m
 - UI icons come from `lucide-react`. It is **v1.x**, which removed the old aliases: use `CodeXml`, `ChartColumn`, `ChartLine`, `LoaderCircle`, `TriangleAlert` — not `Code2`, `BarChart3`, `LineChart`, `Loader2`, `AlertTriangle`.
 - Brand and social marks are official Simple Icons paths stored as data in [src/data/brands.ts](src/data/brands.ts) / [src/data/socials.ts](src/data/socials.ts) and rendered through [`Glyph`](src/components/ui/Glyph.tsx). Simple Icons has withdrawn some marks (Logitech, LinkedIn, Microsoft); entries without a path fall back to a wordmark. Do not invent a path to fill a gap — the Angular build shipped several invented ones that did not render the real logo.
 
+### Layout traps that have already bitten
+
+- **`backdrop-filter` creates a containing block for `position: fixed`
+  descendants** (same as `transform`/`filter`). The navbar gains it once
+  scrolled, so the mobile drawer and its scrim are `createPortal`-ed to
+  `document.body` — rendering them inside `<header>` collapsed the scrim to the
+  height of the header. Do not move them back.
+- **`.hero` is a flex column and `.container` carries `margin: 0 auto`.** Auto
+  cross-axis margins suppress stretch, so `.inner` needs an explicit
+  `width: 100%` or the grid sizes itself to its content.
+- **The hero headline is sized in `cqw`, not `vw`.** "Empowering" cannot wrap;
+  a viewport-based clamp let the glyphs overflow the grid column and collide
+  with the floating cards between 1024–1280px. `.copy` is the query container.
+- **Clip only what needs clipping.** `overflow: hidden` sits on the carousel
+  `.track`, not `.carousel`, because the latter also clipped the controls
+  underneath and cut the bottom off buttons that scale on hover.
+
+### Gradient headings
+
+`.gradientText` in [global.css](src/styles/global.css) is applied to the accent
+half of section headings. It sets a solid `color` first and only engages
+`background-clip: text` inside `@supports`, with a `forced-colors` reset, so it
+degrades instead of vanishing. Both stops of `--grad-from`/`--grad-to`
+independently clear 4.5:1 on `--bg`; keep that property if you retune them,
+because the automated contrast check *cannot* measure gradient-clipped text
+(computed `color` is transparent) and skips it.
+
+### Kris and the enquiry hand-off
+
+[ChatAgent](src/components/ChatAgent/ChatAgent.tsx) runs a scripted branching
+flow (topic → detail → timeline → name/email) defined in
+[script.ts](src/components/ChatAgent/script.ts), then hands a composed enquiry
+to the contact form via [src/enquiry/](src/enquiry/).
+
+That hand-off is a **subscription, not shared state**: the provider keeps a
+listener set and `Contact` subscribes. This keeps the form's `setState` inside
+an external-event callback (the `react-hooks/set-state-in-effect` rule rejects
+the state-plus-effect version) and means a missing provider degrades to "no
+hand-off" rather than crashing, which is what lets `Contact` render bare in
+tests.
+
 ### Contact form
 
 [src/components/Contact/Contact.tsx](src/components/Contact/Contact.tsx) POSTs JSON to the Formspree endpoint in `site.formspreeEndpoint`. It validates before sending (rules and unit tests in [validation.ts](src/components/Contact/validation.ts) / `validation.test.ts`), checks `response.ok`, surfaces Formspree's own error message on a 4xx, distinguishes network failure from rejection, and carries a `_gotcha` honeypot. This is the site's primary conversion path — preserve the error handling when changing it.

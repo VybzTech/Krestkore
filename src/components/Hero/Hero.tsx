@@ -17,17 +17,17 @@ const floatingCards: readonly { icon: LucideIcon; text: string }[] = [
 export function Hero() {
   return (
     <section className={styles.hero} id="home">
+      {/* The old blurred orbs are gone; <Aurora /> now provides that bloom
+          across the whole page instead of duplicating it here. */}
       <div className={styles.bgGrid} aria-hidden="true" />
-      <div className={`${styles.orb} ${styles.orbOne}`} aria-hidden="true" />
-      <div className={`${styles.orb} ${styles.orbTwo}`} aria-hidden="true" />
       <div className={styles.scanLine} aria-hidden="true" />
 
       <div className={`container ${styles.inner}`}>
-        <div>
+        <div className={styles.copy}>
           <span className="sectionLabel">Lagos · Nigeria</span>
           <h1 className={styles.title}>
             <span className={styles.line}>Empowering</span>
-            <span className={`${styles.line} ${styles.accent}`}>Tomorrow</span>
+            <span className={`${styles.line} ${styles.accent} gradientText`}>Tomorrow</span>
             <span className={styles.line}>Through Innovation</span>
           </h1>
           <p className={styles.sub}>
