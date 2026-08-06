@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { brands, type Brand } from '../../data/brands'
 import { Glyph } from '../ui/Glyph'
 import styles from './Marquee.module.css'
@@ -6,7 +7,7 @@ function BrandRow({ brand }: { brand: Brand }) {
   return (
     <div
       className={`${styles.logo} ${brand.path ? '' : styles.wordmarkOnly}`}
-      style={{ '--brand-color': brand.color } as React.CSSProperties}
+      style={{ '--brand-color': brand.color } as CSSProperties}
     >
       {brand.path ? <Glyph path={brand.path} size={26} /> : null}
       <span className={styles.name}>{brand.name}</span>

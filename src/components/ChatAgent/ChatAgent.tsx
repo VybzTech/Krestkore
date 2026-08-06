@@ -50,6 +50,7 @@ export function ChatAgent() {
   const [reply, setReply] = useState<string | null>(null)
   const launcherRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
   const replyTimer = useRef<number | undefined>(undefined)
 
   // Escape closes the panel and hands focus back to the launcher.
@@ -72,6 +73,13 @@ export function ChatAgent() {
 
   // The Angular version left this timeout running after teardown.
   useEffect(() => () => window.clearTimeout(replyTimer.current), [])
+
+  // Keep the newest message in view; the body is a short scroll area.
+  useEffect(() => {
+    const body = bodyRef.current
+    if (!body) return
+    body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' })
+  }, [selected, reply])
 
   const handleQuick = (link: QuickLink) => {
     setSelected(link)
@@ -122,7 +130,7 @@ export function ChatAgent() {
           </button>
         </div>
 
-        <div className={styles.body}>
+        <div className={styles.body} ref={bodyRef}>
           <div className={styles.botMsg}>
             <p>
               <Hand size={15} aria-hidden="true" />

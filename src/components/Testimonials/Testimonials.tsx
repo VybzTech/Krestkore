@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState, type KeyboardEvent } from 'react'
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import { testimonials } from '../../data/testimonials'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
@@ -11,7 +11,6 @@ export function Testimonials() {
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
   const prefersReducedMotion = usePrefersReducedMotion()
-  const liveRegionRef = useRef<HTMLParagraphElement>(null)
 
   const previous = active === 0 ? COUNT - 1 : active - 1
 
@@ -37,7 +36,7 @@ export function Testimonials() {
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [])
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowLeft') {
       event.preventDefault()
       prev()
@@ -145,7 +144,7 @@ export function Testimonials() {
           </div>
         </div>
 
-        <p ref={liveRegionRef} className="srOnly" aria-live="polite">
+        <p className="srOnly" aria-live="polite">
           {current ? `Testimonial ${active + 1} of ${COUNT}, from ${current.name}` : ''}
         </p>
 

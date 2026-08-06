@@ -45,11 +45,13 @@ export function Hero() {
             </a>
           </div>
 
+          {/* Term is the label, description is the figure. CSS flips them
+              visually so the number still reads first. */}
           <dl className={styles.stats}>
             {stats.map((stat) => (
               <div className={styles.stat} key={stat.label}>
-                <dt className={styles.statValue}>{stat.value}</dt>
-                <dd className={styles.statLabel}>{stat.label}</dd>
+                <dt className={styles.statLabel}>{stat.label}</dt>
+                <dd className={styles.statValue}>{stat.value}</dd>
               </div>
             ))}
           </dl>

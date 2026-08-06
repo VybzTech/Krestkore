@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { Check } from 'lucide-react'
 import { services } from '../../data/services'
 import { useReveal } from '../../hooks/useReveal'
@@ -29,7 +30,7 @@ export function Services() {
               <article
                 className={styles.card}
                 key={service.title}
-                style={{ '--reveal-delay': `${index * 0.08}s` } as React.CSSProperties}
+                style={{ '--reveal-delay': `${index * 0.08}s` } as CSSProperties}
               >
                 <div className={styles.accentBar} aria-hidden="true" />
                 <div className={styles.cardHeader}>

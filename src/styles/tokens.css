@@ -25,9 +25,15 @@
   --text-base: 0.9rem;
   --text-md: 1rem;
   --text-lg: 1.05rem;
-  --text-display-sm: clamp(1.8rem, 3.5vw, 2.8rem);
-  --text-display-md: clamp(2rem, 4vw, 3rem);
-  --text-display-lg: clamp(2.6rem, 5vw, 4.2rem);
+  /*
+   * Lower bounds are sized so the longest unbreakable word in each heading
+   * ("Uncompromising", "Full-Spectrum", "Innovation") still fits a 320px
+   * viewport. The original scale bottomed out at 2.6rem and clipped the hero
+   * headline on phones.
+   */
+  --text-display-sm: clamp(1.6rem, 6vw, 2.8rem);
+  --text-display-md: clamp(1.75rem, 6.5vw, 3rem);
+  --text-display-lg: clamp(2rem, 8.5vw, 4.2rem);
 
   --radius-sm: 5px;
   --radius-md: 10px;
