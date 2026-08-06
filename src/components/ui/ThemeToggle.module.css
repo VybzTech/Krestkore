@@ -1,0 +1,69 @@
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    border-color var(--dur-fast) ease,
+    background var(--dur-fast) ease;
+}
+
+.toggle:hover {
+  border-color: var(--border-strong);
+}
+
+/* The pill that slides under the active icon. */
+.thumb {
+  position: absolute;
+  top: 0.28rem;
+  left: 0.28rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: -1;
+  transition: transform var(--dur-mid) var(--ease-out-expo);
+}
+
+.toggle[data-theme='light'] .thumb {
+  transform: translateX(31px);
+}
+
+.slot {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: color var(--dur-mid) var(--ease-out-expo);
+}
+
+.slot svg {
+  width: 15px;
+  height: 15px;
+}
+
+.toggle[data-theme='dark'] .moon,
+.toggle[data-theme='light'] .sun {
+  color: var(--on-accent);
+}
+
+@media (max-width: 480px) {
+  .toggle {
+    padding: 0.24rem;
+  }
+  .thumb,
+  .slot {
+    width: 26px;
+    height: 26px;
+  }
+  .toggle[data-theme='light'] .thumb {
+    transform: translateX(28px);
+  }
+}

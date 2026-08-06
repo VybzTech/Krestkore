@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
+/** True when the browser cannot observe intersections, so nothing can hide. */
+function observerUnavailable() {
+  return typeof IntersectionObserver === 'undefined'
+}
+
 /**
  * Reveals an element the first time it enters the viewport.
  *
@@ -12,20 +17,15 @@ export function useReveal<T extends HTMLElement>(options?: {
   rootMargin?: string
 }) {
   const ref = useRef<T | null>(null)
-  const [revealed, setRevealed] = useState(false)
+  // Start revealed when there is no observer, rather than hiding content.
+  const [revealed, setRevealed] = useState(observerUnavailable)
 
   const threshold = options?.threshold ?? 0.15
   const rootMargin = options?.rootMargin ?? '0px 0px -60px 0px'
 
   useEffect(() => {
     const element = ref.current
-    if (!element || revealed) return
-
-    // Without IntersectionObserver, show the content rather than hide it.
-    if (typeof IntersectionObserver === 'undefined') {
-      setRevealed(true)
-      return
-    }
+    if (!element || revealed || observerUnavailable()) return
 
     const observer = new IntersectionObserver(
       (entries) => {

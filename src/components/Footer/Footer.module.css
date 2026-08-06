@@ -1,0 +1,141 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8) 0 var(--space-6);
+  /* Clears the fixed chat launcher on small screens. */
+  padding-bottom: 7rem;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.brandName strong {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 0.3rem;
+  font-style: italic;
+}
+
+.sub {
+  font-size: 0.78rem;
+  color: var(--muted);
+  opacity: 0.75;
+  margin-bottom: 1.2rem;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.socialIcon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  transition:
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out-expo);
+  text-decoration: none;
+}
+
+.socialIcon:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  transform: translateY(-2px);
+}
+
+.column h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+
+.column ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.column a {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color var(--dur-fast) ease;
+}
+
+.column a:hover {
+  color: var(--accent-ink);
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border);
+}
+
+.bottom p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.builtWith {
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .bottom {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+}

@@ -93,17 +93,26 @@
 
   --scrim: rgb(6 14 30 / 0.9);
   --star: #14b8a6;
+
+  --danger-bg: rgb(239 68 68 / 0.1);
+  --danger-border: rgb(239 68 68 / 0.4);
+  --danger-text: #fca5a5;
+  --online: #22c55e;
 }
 
 /* ── Light: same hue family, re-tuned for a bright surface ───────────── */
 [data-theme='light'] {
   color-scheme: light;
 
-  /* Deepened so accent-as-text clears 4.5:1 on the light background. */
-  --accent-rgb: 13 148 136;
-  --accent: #0d9488;
-  --accent-ink: #0b7c72;
-  --accent-strong: #0a6b62;
+  /*
+   * Deepened twice over the dark-theme teal: --accent must clear 4.5:1 against
+   * the light text sitting on it (buttons, skip link), and --accent-ink must
+   * clear 4.5:1 as text on --bg. Measured: 4.9:1 and 5.6:1.
+   */
+  --accent-rgb: 10 125 114;
+  --accent: #0a7d72;
+  --accent-ink: #0a6f66;
+  --accent-strong: #085c55;
   --on-accent: #f6fffd;
 
   /* Neutrals tinted toward the brand navy: never a flat #fff. */
@@ -133,4 +142,10 @@
 
   --scrim: rgb(244 247 251 / 0.88);
   --star: #0d9488;
+
+  /* Darkened so error text clears 4.5:1 on the light surface. */
+  --danger-bg: rgb(220 38 38 / 0.07);
+  --danger-border: rgb(220 38 38 / 0.35);
+  --danger-text: #b91c1c;
+  --online: #15803d;
 }

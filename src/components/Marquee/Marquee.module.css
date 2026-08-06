@@ -1,0 +1,114 @@
+.section {
+  padding: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fades the strip into the page at both ends. */
+.section::before,
+.section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.section::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.section::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+.label {
+  margin-bottom: 1.8rem;
+}
+
+.wrapper {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 42s linear infinite;
+}
+
+.wrapper:hover .track,
+.wrapper:focus-within .track {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0 2.4rem;
+  color: var(--muted);
+  transition: color var(--dur-mid) var(--ease-out-quart);
+}
+
+.logo:hover {
+  color: var(--brand-color, var(--accent-ink));
+}
+
+.logo svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Brands with no licensed glyph render as a wordmark only. */
+.wordmarkOnly .name {
+  font-size: 1.15rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 0.5rem 0;
+  }
+  .group + .group {
+    display: none;
+  }
+  .group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .section::before,
+  .section::after {
+    width: 60px;
+  }
+  .logo {
+    padding: 0 1.4rem;
+  }
+  .name {
+    font-size: 0.95rem;
+  }
+}
