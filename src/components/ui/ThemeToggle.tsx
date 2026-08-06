@@ -23,10 +23,10 @@ export function ThemeToggle({ className }: { className?: string }) {
     >
       <span className={styles.thumb} aria-hidden="true" />
       <span className={`${styles.slot} ${styles.moon}`} aria-hidden="true">
-        <Moon strokeWidth={2} />
+        <Moon />
       </span>
       <span className={`${styles.slot} ${styles.sun}`} aria-hidden="true">
-        <Sun strokeWidth={2} />
+        <Sun />
       </span>
     </button>
   )

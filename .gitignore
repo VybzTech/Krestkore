@@ -34,3 +34,4 @@ Thumbs.db
 angular-legacy/node_modules/
 angular-legacy/.angular/
 angular-legacy/dist/
+angular-legacy/**

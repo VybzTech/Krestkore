@@ -44,9 +44,12 @@
   transition: color var(--dur-mid) var(--ease-out-expo);
 }
 
+/* Sized here rather than via the icon prop so both slots stay identical.
+   15px with a 2px stroke made the sun's rays merge into a blob. */
 .slot svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.75;
 }
 
 .toggle[data-theme='dark'] .moon,
