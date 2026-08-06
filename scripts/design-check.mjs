@@ -20,9 +20,11 @@ const OUT = process.argv[2] ?? './design-shots'
 const BASE = process.env.BASE_URL ?? 'http://localhost:4173'
 mkdirSync(OUT, { recursive: true })
 
+// 375 rather than 390: the narrower iPhone SE/8 width is the stricter test and
+// anything that passes it passes the taller modern phones too.
 const VIEWPORTS = [
-  { name: 'mobile', width: 390, height: 844 },
-  { name: 'tablet', width: 834, height: 1112 },
+  { name: 'mobile', width: 375, height: 812 },
+  { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ]
 const THEMES = ['dark', 'light']

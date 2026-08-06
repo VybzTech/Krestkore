@@ -434,6 +434,19 @@
   animation: pulseRing 2s ease-in-out infinite;
 }
 
+/* Applied while the contact form is on screen; see ChatAgent.tsx. Desktop has
+   room for both, so this only takes effect on narrow viewports. */
+@media (max-width: 860px) {
+  .standDown {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.9);
+    transition:
+      opacity var(--dur-mid) var(--ease-out-quart),
+      transform var(--dur-mid) var(--ease-out-quart);
+  }
+}
+
 @media (max-width: 560px) {
   .wrapper {
     bottom: 1rem;

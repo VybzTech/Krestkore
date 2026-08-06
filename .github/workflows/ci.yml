@@ -2,9 +2,9 @@ name: CI
 
 # Quality gates. Runs on every push and pull request, including the branches
 # that later deploy, so nothing reaches Netlify without passing first.
+# Pull requests only. Pushes to main/prod are gated by the identical job inside
+# deploy.yml, so running here too would pay for the whole suite twice per push.
 on:
-  push:
-    branches: [main, prod]
   pull_request:
     branches: [main, prod]
   workflow_dispatch:

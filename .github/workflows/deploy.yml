@@ -88,7 +88,13 @@ jobs:
               --message "preview ${{ github.sha }}" \
               --json > deploy.json
           fi
-          URL=$(node -p "require('./deploy.json').deploy_url || require('./deploy.json').url")
+          # For --prod, `url` is the live site; `deploy_url` is the immutable
+          # per-deploy permalink. Branch deploys only have deploy_url.
+          if [ "${{ github.ref_name }}" = "prod" ]; then
+            URL=$(node -p "const d=require('./deploy.json'); d.url || d.deploy_url")
+          else
+            URL=$(node -p "const d=require('./deploy.json'); d.deploy_url || d.url")
+          fi
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
           echo "- branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"

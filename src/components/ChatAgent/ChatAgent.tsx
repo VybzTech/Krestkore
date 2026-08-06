@@ -19,6 +19,7 @@ export function ChatAgent() {
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState<string | null>(null)
 
+  const [contactInView, setContactInView] = useState(false)
   const launcherRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -41,6 +42,25 @@ export function ChatAgent() {
   useEffect(() => {
     if (open) closeRef.current?.focus()
   }, [open])
+
+  /*
+   * On narrow screens the fixed launcher sits on top of the contact form's
+   * fields, stealing taps meant for the inputs. Once the visitor has reached
+   * the form they are already converting, so the launcher stands down.
+   */
+  useEffect(() => {
+    const section = document.getElementById('contact')
+    if (!section || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry) setContactInView(entry.isIntersecting)
+      },
+      { threshold: 0.12 },
+    )
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   // Keep the newest turn in view as the conversation grows.
   useEffect(() => {
@@ -94,7 +114,9 @@ export function ChatAgent() {
   }, [topic, detail, timeline])
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={`${styles.wrapper} ${contactInView && !open ? styles.standDown : ''}`}
+    >
       <div
         id="kris-chat-panel"
         className={`${styles.bubble} ${open ? styles.bubbleVisible : ''}`}
