@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Navy circle background -->
+  <circle cx="32" cy="32" r="30" fill="#0A1F44"/>
+  <!-- Subtle teal ring -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#14B8A6" stroke-width="0.8" opacity="0.4"/>
+  <!-- Left chevron: teal -->
+  <polyline
+    points="19,14 34,32 19,50"
+    fill="none"
+    stroke="#14B8A6"
+    stroke-width="5.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <!-- Right chevron: white 78% -->
+  <polyline
+    points="30,14 45,32 30,50"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="5.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.78"/>
+</svg>

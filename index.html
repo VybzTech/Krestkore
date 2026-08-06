@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Krestkore Solutions Limited — Empowering Tomorrow Through Innovation</title>
+    <meta
+      name="description"
+      content="Krestkore Solutions Limited. Premier IT solutions provider in Lagos, Nigeria. Hardware, networking, software development, security systems, and data intelligence."
+    />
+    <meta name="theme-color" content="#060e1e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)" />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png" />
+
+    <meta property="og:title" content="Krestkore Solutions Limited" />
+    <meta
+      property="og:description"
+      content="Empowering Tomorrow Through Innovation. End-to-end IT solutions in Lagos, Nigeria."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/favicon-512.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@krestkore" />
+    <meta name="twitter:title" content="Krestkore Solutions Limited" />
+    <meta
+      name="twitter:description"
+      content="Empowering Tomorrow Through Innovation. End-to-end IT solutions in Lagos, Nigeria."
+    />
+    <meta name="twitter:image" content="/assets/favicon-512.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Syne:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Applied before first paint so the theme never flashes.
+      (() => {
+        try {
+          const stored = localStorage.getItem('krestkore-theme')
+          const theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark'
+          document.documentElement.dataset.theme = theme
+        } catch {
+          document.documentElement.dataset.theme = 'dark'
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
