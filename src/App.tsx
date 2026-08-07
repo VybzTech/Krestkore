@@ -12,9 +12,7 @@ import { Testimonials } from './components/Testimonials/Testimonials'
 export function App() {
   return (
     <>
-      <a href="#main" className="skipLink">
-        Skip to content
-      </a>
+      {/* <a s> */}
       <Aurora />
       <Navbar />
       <main id="main">
