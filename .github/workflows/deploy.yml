@@ -1,14 +1,11 @@
 name: Deploy
 
-# Two-branch model:
-#   main  -> Netlify branch deploy (preview URL, not the customer-facing domain)
 #   prod  -> Netlify production deploy (serves the Whogohost domain)
-#
 # Deploys only run after the quality gates pass, and are skipped entirely when
 # the Netlify secrets are absent, so a fresh clone of the repo does not fail.
 on:
   push:
-    branches: [main, prod]
+    branches: [prod]
   workflow_dispatch:
 
 concurrency:
@@ -73,23 +70,14 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           set -euo pipefail
-          if [ "${{ github.ref_name }}" = "prod" ]; then
-            # --prod publishes to the site's production domain.
-            npx --yes netlify-cli@latest deploy \
-              --dir=dist \
-              --prod \
-              --message "prod ${{ github.sha }}" \
-              --json > deploy.json
-          else
-            # Branch deploy: a stable preview URL, never the live domain.
-            npx --yes netlify-cli@latest deploy \
-              --dir=dist \
-              --alias main \
-              --message "preview ${{ github.sha }}" \
-              --json > deploy.json
-          fi
-          URL=$(node -p "require('./deploy.json').deploy_url || require('./deploy.json').url")
+          npx --yes netlify-cli@latest deploy \
+            --dir=dist \
+            --prod \
+            --message "prod ${{ github.sha }}" \
+            --json > deploy.json
+
+          URL=$(node -p "const d=require('./deploy.json'); d.url || d.deploy_url")
           echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
-          echo "- branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Deployed to production" >> "$GITHUB_STEP_SUMMARY"
+          echo "- commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- url: $URL" >> "$GITHUB_STEP_SUMMARY"
