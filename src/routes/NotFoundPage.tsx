@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom'
 import { servicePages } from '../data/servicePages'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useSeo } from '../hooks/useSeo'
 import styles from './Page.module.css'
 
 export function NotFoundPage() {
-  useDocumentTitle('Page not found — Krestkore Solutions')
+  useSeo({
+    title: 'Page not found — Krestkore Solutions',
+    description: 'That page does not exist. Find services, partners and contact details here.',
+    path: '/404',
+  })
 
   return (
     <div className={styles.page}>

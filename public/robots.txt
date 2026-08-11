@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Netlify preview and branch deploys already send X-Robots-Tag: noindex, so
+# only the production domain is crawlable.
+
+Sitemap: https://krestkore.com/sitemap.xml

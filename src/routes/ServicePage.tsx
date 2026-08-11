@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Check, ChevronRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { findServicePage } from '../data/servicePages'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useSeo } from '../hooks/useSeo'
 import { revealItem, revealStagger, viewportOnce } from '../motion/presets'
 import styles from './Page.module.css'
 
@@ -10,7 +10,11 @@ export function ServicePage() {
   const { slug } = useParams()
   const page = findServicePage(slug)
 
-  useDocumentTitle(page ? `${page.title} — Krestkore Solutions` : 'Krestkore Solutions')
+  useSeo({
+    title: page ? `${page.title} — Krestkore Solutions` : 'Krestkore Solutions',
+    description: page?.summary ?? 'IT services in Lagos, Nigeria.',
+    path: `/services/${slug ?? ''}`,
+  })
 
   if (!page) return <Navigate to="/404" replace />
 
@@ -47,7 +51,16 @@ export function ServicePage() {
           </motion.div>
 
           <motion.figure className={styles.figure} variants={revealItem}>
-            <img src={page.image} alt={page.imageAlt} loading="lazy" decoding="async" />
+            {/* Intrinsic size matches the 4/3 CSS aspect-ratio so the browser
+                reserves the box before the image lands: no layout shift. */}
+            <img
+              src={page.image}
+              alt={page.imageAlt}
+              width={1200}
+              height={900}
+              loading="lazy"
+              decoding="async"
+            />
           </motion.figure>
         </motion.div>
 

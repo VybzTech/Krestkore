@@ -6,7 +6,23 @@ export default defineConfig({
   build: {
     target: 'es2022',
     cssCodeSplit: true,
-    reportCompressedSize: false,
+    reportCompressedSize: true,
+    rollupOptions: {
+      output: {
+        /*
+         * Framework code changes far less often than site content. Splitting it
+         * out means a copy tweak invalidates only the small app chunk, not the
+         * ~400KB of vendor code alongside it.
+         */
+        manualChunks: (id: string) => {
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('framer-motion') || id.includes('motion-dom')) return 'motion'
+          if (id.includes('react-router')) return 'router'
+          if (id.includes('/react/') || id.includes('/react-dom/')) return 'react'
+          return undefined
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',

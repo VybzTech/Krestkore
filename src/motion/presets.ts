@@ -26,11 +26,6 @@ export const revealItem: Variants = {
   show: { opacity: 1, y: 0, transition: baseTransition },
 }
 
-export const revealFade: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: baseTransition },
-}
-
 export const revealScale: Variants = {
   hidden: { opacity: 0, scale: 0.96, y: 18 },
   show: { opacity: 1, scale: 1, y: 0, transition: baseTransition },
@@ -51,9 +46,3 @@ export const revealStaggerTight: Variants = {
     transition: { staggerChildren: 0.045 },
   },
 }
-
-/** Standard interactive feedback for buttons and cards. */
-export const hoverLift = {
-  whileHover: { y: -3, transition: { duration: 0.2, ease: easeOutExpo } },
-  whileTap: { y: 0, scale: 0.985, transition: { duration: 0.1 } },
-} as const

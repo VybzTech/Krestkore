@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { site } from '../data/site'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useSeo } from '../hooks/useSeo'
 import styles from './Page.module.css'
 
 /*
@@ -13,7 +13,12 @@ import styles from './Page.module.css'
 const LAST_UPDATED = 'August 2026'
 
 export function PrivacyPage() {
-  useDocumentTitle('Privacy Policy — Krestkore Solutions')
+  useSeo({
+    title: 'Privacy Policy — Krestkore Solutions',
+    description:
+      'What Krestkore Solutions does with the information you submit through this website.',
+    path: '/privacy',
+  })
 
   return (
     <div className={styles.page}>
@@ -92,7 +97,11 @@ export function PrivacyPage() {
 }
 
 export function TermsPage() {
-  useDocumentTitle('Terms of Service — Krestkore Solutions')
+  useSeo({
+    title: 'Terms of Service — Krestkore Solutions',
+    description: 'The terms covering your use of the Krestkore Solutions website.',
+    path: '/terms',
+  })
 
   return (
     <div className={styles.page}>

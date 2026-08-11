@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useSeo } from '../hooks/useSeo'
 import { About } from '../components/About/About'
 import { Contact } from '../components/Contact/Contact'
 import { Hero } from '../components/Hero/Hero'
@@ -11,6 +12,13 @@ import { Services } from '../components/Services/Services'
 
 export function HomePage() {
   const { hash } = useLocation()
+
+  useSeo({
+    title: 'Krestkore Solutions — IT Services in Lagos, Nigeria',
+    description:
+      'Hardware procurement, networking, software development, security systems and data consulting for businesses in Lagos. Talk to Krestkore Solutions Limited.',
+    path: '/',
+  })
 
   /*
    * Nav links are `/#services` style, so arriving from another route lands

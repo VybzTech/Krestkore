@@ -90,8 +90,6 @@
 
   --glow-soft: rgb(var(--accent-rgb) / 0.18);
   --grid-line: rgb(var(--accent-rgb) / 0.04);
-  --orb-accent: rgb(var(--accent-rgb) / 0.12);
-  --orb-deep: rgb(10 31 68 / 0.8);
 
   --shadow-sm: 0 4px 16px rgb(0 0 0 / 0.3);
   --shadow-md: 0 8px 32px rgb(var(--accent-rgb) / 0.3);
@@ -147,8 +145,6 @@
 
   --glow-soft: rgb(var(--accent-rgb) / 0.1);
   --grid-line: rgb(var(--accent-rgb) / 0.06);
-  --orb-accent: rgb(var(--accent-rgb) / 0.1);
-  --orb-deep: rgb(148 178 214 / 0.35);
 
   --shadow-sm: 0 4px 16px rgb(10 31 68 / 0.08);
   --shadow-md: 0 8px 32px rgb(10 31 68 / 0.1);

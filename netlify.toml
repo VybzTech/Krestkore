@@ -37,6 +37,10 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Two years, including subdomains. Only add `preload` once you are certain
+    # every subdomain can serve HTTPS: the preload list is hard to get out of.
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains"
+    Cross-Origin-Opener-Policy = "same-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
     # script-src allows 'unsafe-inline' for one reason: the theme bootstrap in
     # index.html must run before first paint to avoid a flash, and it is inline
