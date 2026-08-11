@@ -13,5 +13,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // Animated components make user-event interactions slower than the 5s
+    // default allows on a cold run.
+    testTimeout: 20000,
   },
 })

@@ -40,11 +40,14 @@
   font-style: italic;
 }
 
-.sub {
-  font-size: 0.78rem;
+.address {
+  font-style: normal;
+  font-size: 0.8rem;
+  line-height: 1.65;
   color: var(--muted);
-  opacity: 0.75;
+  opacity: 0.85;
   margin-bottom: 1.2rem;
+  max-width: 30ch;
 }
 
 .socialIcons {
@@ -118,8 +121,22 @@
   opacity: 0.8;
 }
 
-.builtWith {
-  font-style: italic;
+.legal {
+  display: flex;
+  gap: 1.4rem;
+}
+
+.legal a {
+  font-size: 0.78rem;
+  color: var(--muted);
+  opacity: 0.85;
+  text-decoration: none;
+  transition: color var(--dur-fast) ease;
+}
+
+.legal a:hover {
+  color: var(--accent-ink);
+  opacity: 1;
 }
 
 @media (max-width: 900px) {

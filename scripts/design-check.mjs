@@ -28,7 +28,7 @@ const VIEWPORTS = [
   { name: 'desktop', width: 1440, height: 900 },
 ]
 const THEMES = ['dark', 'light']
-const SECTIONS = ['services', 'testimonials', 'about', 'contact']
+const SECTIONS = ['partners', 'services', 'about', 'contact']
 
 const problems = []
 const note = (msg) => problems.push(msg)
@@ -184,15 +184,14 @@ for (const theme of THEMES) {
   await page.waitForTimeout(400)
   await page.screenshot({ path: `${OUT}/hover-03-service-card.png` })
 
-  // Carousel controls: the classic clipped-on-scale case.
-  await page.evaluate(() => document.getElementById('testimonials')?.scrollIntoView())
-  await page.waitForTimeout(1500)
-  const next = page.getByRole('button', { name: 'Next testimonial' })
-  await next.hover()
-  await page.waitForTimeout(400)
-  const clip = await page.evaluate(CLIP_PROBE, '#testimonials button[aria-label="Next testimonial"]')
-  if (clip) note(`[hover] next-testimonial ${clip}`)
-  await page.screenshot({ path: `${OUT}/hover-04-carousel-controls.png` })
+  // Service card hover reveals a "Learn more" link inside the tile; make sure
+  // it is not clipped by the card's own overflow:hidden.
+  const learnMore = page.locator('#services a[class*="cardLink"]').first()
+  if (await learnMore.isVisible().catch(() => false)) {
+    const clip = await page.evaluate(CLIP_PROBE, '#services a[class*="cardLink"]')
+    if (clip) note(`[hover] service card link ${clip}`)
+  }
+  await page.screenshot({ path: `${OUT}/hover-04-service-link.png` })
 
   // Form focus ring + submit hover.
   await page.evaluate(() => document.getElementById('contact')?.scrollIntoView())
@@ -207,7 +206,7 @@ for (const theme of THEMES) {
   // Footer socials.
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
   await page.waitForTimeout(700)
-  await page.getByRole('link', { name: /on Instagram/i }).hover()
+  await page.getByRole('link', { name: /on Instagram/i }).first().hover()
   await page.waitForTimeout(350)
   await page.screenshot({ path: `${OUT}/hover-07-social.png` })
 
@@ -260,34 +259,80 @@ for (const theme of THEMES) {
   page.on('pageerror', (e) => note(`[kris] pageerror: ${e.message}`))
   await page.addInitScript(() => localStorage.setItem('krestkore-theme', 'light'))
   await page.goto(BASE, { waitUntil: 'networkidle' })
-  await page.getByRole('button', { name: 'Chat with Kris' }).click()
-  await page.waitForTimeout(500)
-  await page.getByRole('button', { name: 'Networking', exact: true }).click()
-  await page.waitForTimeout(500)
-  await page.getByRole('button', { name: 'Multiple branches' }).click()
-  await page.waitForTimeout(500)
-  await page.getByRole('button', { name: 'Within a month' }).click()
-  await page.waitForTimeout(500)
-  await page.screenshot({ path: `${OUT}/kris-01-capture.png` })
-  await page.getByLabel('Your name').fill('Jane Doe')
-  await page.getByLabel('Email', { exact: true }).fill('jane@company.com')
-  await page.getByRole('button', { name: /send to the team/i }).click()
-  await page.waitForTimeout(1600)
-  await page.screenshot({ path: `${OUT}/kris-02-prefilled-form.png` })
-
-  const filled = await page.evaluate(() => {
-    const val = (label) => {
-      const el = Array.from(document.querySelectorAll('label')).find((l) =>
-        l.textContent.trim().toLowerCase().startsWith(label),
-      )
-      if (!el) return null
-      const field = document.getElementById(el.getAttribute('for'))
-      return field ? field.value : null
-    }
-    return { name: val('full name'), email: val('email address'), message: val('message') }
+  // Kris submits straight to Formspree, so intercept rather than really send.
+  let posted = null
+  await page.route('https://formspree.io/**', async (route) => {
+    posted = route.request().postDataJSON()
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{}' })
   })
-  if (!filled.name || !filled.email || !filled.message) {
-    note(`[kris] hand-off did not fill the form: ${JSON.stringify(filled)}`)
+
+  await page.getByRole('button', { name: 'Work with us' }).click()
+  await page.waitForTimeout(400)
+  await page.getByRole('button', { name: 'Networking', exact: true }).click()
+
+  // The number of follow-ups is randomised; answer whatever is newest.
+  for (let i = 0; i < 10; i += 1) {
+    await page.waitForTimeout(420)
+    if (await page.getByPlaceholder('Your name').isVisible().catch(() => false)) break
+    const newest = page.locator('[class*="options"]').last().locator('button').first()
+    if (!(await newest.isVisible().catch(() => false))) break
+    await newest.click()
+  }
+
+  if (!(await page.getByPlaceholder('Your name').isVisible().catch(() => false))) {
+    note('[kris] never reached the name step')
+  }
+  await page.screenshot({ path: `${OUT}/kris-01-name-step.png` })
+
+  await page.getByPlaceholder('Your name').fill('Jane Doe')
+  await page.getByRole('button', { name: /continue/i }).click()
+  await page.waitForTimeout(500)
+
+  // Email must be a separate turn, not shown alongside the name.
+  if (await page.getByPlaceholder('Your name').isVisible().catch(() => false)) {
+    note('[kris] name and email are on screen at the same time')
+  }
+  await page.screenshot({ path: `${OUT}/kris-02-email-step.png` })
+
+  await page.getByPlaceholder('you@company.com').fill('jane@company.com')
+  await page.getByRole('button', { name: /send to the team/i }).click()
+  await page.waitForTimeout(1500)
+  await page.screenshot({ path: `${OUT}/kris-03-sent.png` })
+
+  if (!posted) note('[kris] nothing was posted to Formspree')
+  else if (!posted.name || !posted.email || !posted.message) {
+    note(`[kris] submission missing fields: ${JSON.stringify(posted)}`)
+  }
+  if (!(await page.getByText(/sent\./i).isVisible().catch(() => false))) {
+    note('[kris] no confirmation shown after sending')
+  }
+  await ctx.close()
+}
+
+// ── Routes ──────────────────────────────────────────────────────────────
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+  page.on('pageerror', (e) => note(`[routes] pageerror: ${e.message}`))
+  for (const path of [
+    '/services/hardware-infrastructure',
+    '/services/networking',
+    '/services/software-development',
+    '/services/security-systems',
+    '/services/data-consulting',
+    '/privacy',
+    '/terms',
+    '/definitely-not-a-page',
+  ]) {
+    await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(700)
+    const h1 = await page.locator('h1').first().textContent().catch(() => null)
+    if (!h1 || !h1.trim()) note(`[routes] ${path} rendered no heading`)
+    for (const o of await page.evaluate(OVERFLOW_PROBE)) note(`[routes] overflow @${path}: ${o}`)
+    for (const f of await page.evaluate(CONTRAST_PROBE)) {
+      note(`[routes] contrast ${f.ratio}:1 @${path} "${f.text}"`)
+    }
+    await page.screenshot({ path: `${OUT}/route-${path.replace(/\W+/g, '-')}.png` })
   }
   await ctx.close()
 }

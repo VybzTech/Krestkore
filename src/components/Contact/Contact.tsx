@@ -1,6 +1,5 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { ArrowRight, Check, LoaderCircle, Mail, MapPin, Phone, TriangleAlert } from 'lucide-react'
-import { useEnquiry } from '../../enquiry/useEnquiry'
 import { serviceOptions, site } from '../../data/site'
 import {
   emptyForm,
@@ -21,32 +20,9 @@ export function Contact() {
   const honeypotRef = useRef<HTMLInputElement>(null)
   const messageRef = useRef<HTMLTextAreaElement>(null)
   const fieldId = useId()
-  const { subscribe } = useEnquiry()
 
   const id = (field: string) => `${fieldId}-${field}`
   const errorId = (field: string) => `${fieldId}-${field}-error`
-
-  /*
-   * Kris hands a qualified conversation over here. The visitor lands on a form
-   * that is already filled in, with the caret at the end of the message so the
-   * obvious next move is to add detail rather than start over.
-   */
-  useEffect(
-    () =>
-      subscribe((enquiry) => {
-        setForm((current) => ({ ...current, ...enquiry }))
-        setErrors({})
-        setStatus('idle')
-
-        const field = messageRef.current
-        if (!field) return
-        window.setTimeout(() => {
-          field.focus({ preventScroll: true })
-          field.setSelectionRange(field.value.length, field.value.length)
-        }, 450)
-      }),
-    [subscribe],
-  )
 
   const update =
     (field: keyof ContactForm) =>

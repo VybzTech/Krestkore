@@ -1,5 +1,32 @@
-/** The Krestkore double-chevron. Inherits colour from the surrounding theme. */
+import { useState } from 'react'
+
+/**
+ * The Krestkore logo.
+ *
+ * Drop a file at `public/assets/brand/logo.svg` and it is used automatically.
+ * Until then, and if that file ever 404s, this falls back to the built-in
+ * double-chevron so the header can never render empty.
+ */
+const CUSTOM_LOGO = '/assets/brand/logo.svg'
+
 export function BrandMark({ size = 36, className }: { size?: number; className?: string }) {
+  const [useFallback, setUseFallback] = useState(false)
+
+  if (!useFallback) {
+    return (
+      <img
+        src={CUSTOM_LOGO}
+        alt=""
+        width={size}
+        height={size}
+        className={className}
+        style={{ height: size, width: 'auto', objectFit: 'contain' }}
+        onError={() => setUseFallback(true)}
+        aria-hidden="true"
+      />
+    )
+  }
+
   return (
     <svg
       viewBox="0 0 36 36"
