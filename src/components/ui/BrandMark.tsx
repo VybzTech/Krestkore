@@ -1,57 +1,29 @@
-import { useState } from 'react'
+import styles from './BrandMark.module.css'
 
 /**
- * The Krestkore logo.
+ * The Krestkore logo mark.
  *
- * Drop a file at `public/assets/brand/logo.svg` and it is used automatically.
- * Until then, and if that file ever 404s, this falls back to the built-in
- * double-chevron so the header can never render empty.
+ * Source file: `public/assets/brand/logo-icon.svg`. It is applied as a CSS
+ * mask so it can be recoloured per theme (brand teal on dark, deep navy on
+ * light) from a single asset. See BrandMark.module.css for why.
  */
-const CUSTOM_LOGO = '/assets/brand/logo.svg'
-
-export function BrandMark({ size = 36, className }: { size?: number; className?: string }) {
-  const [useFallback, setUseFallback] = useState(false)
-
-  if (!useFallback) {
-    return (
-      <img
-        src={CUSTOM_LOGO}
-        alt=""
-        width={size}
-        height={size}
-        className={className}
-        style={{ height: size, width: 'auto', objectFit: 'contain' }}
-        onError={() => setUseFallback(true)}
-        aria-hidden="true"
-      />
-    )
-  }
-
+export function BrandMark({
+  size = 36,
+  className,
+  /** Paint with the inherited text colour instead of the logo token. */
+  inheritColor = false,
+}: {
+  size?: number
+  className?: string | undefined
+  inheritColor?: boolean
+}) {
   return (
-    <svg
-      viewBox="0 0 36 36"
-      width={size}
-      height={size}
-      fill="none"
-      className={className}
+    <span
+      className={[styles.mark, inheritColor ? styles.inherit : '', className]
+        .filter(Boolean)
+        .join(' ')}
+      style={{ width: size, height: size }}
       aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M6 6L18 18L6 30"
-        stroke="var(--accent)"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 6L26 18L14 30"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.7"
-      />
-    </svg>
+    />
   )
 }

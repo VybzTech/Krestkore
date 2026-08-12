@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, ChartLine, HardDrive, Lock, Network, type LucideIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { BrandMark } from '../ui/BrandMark'
 import { revealItem, revealScale, revealStagger } from '../../motion/presets'
 import styles from './Hero.module.css'
 
@@ -81,27 +82,23 @@ export function Hero() {
           <div className={`${styles.ring} ${styles.ringMid}`} />
           <div className={`${styles.ring} ${styles.ringInner}`} />
           <div className={styles.core}>
-            <svg viewBox="0 0 80 80" fill="none" className={styles.coreIcon} focusable="false">
-              <path
-                d="M16 16L40 40L16 64"
-                stroke="var(--accent)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M32 16L56 40L32 64"
-                stroke="currentColor"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.5"
-              />
-            </svg>
+            <BrandMark size={58} className={styles.coreIcon} />
           </div>
-          <div className={`${styles.dot} ${styles.dotOne}`} />
-          <div className={`${styles.dot} ${styles.dotTwo}`} />
-          <div className={`${styles.dot} ${styles.dotThree}`} />
+
+          {/*
+            Each dot sits at the end of a zero-size arm pinned to the centre.
+            Rotating the arm sweeps the dot around its ring, so the orbit
+            radius is set by the dot's offset and the direction by the arm.
+          */}
+          <div className={`${styles.orbit} ${styles.orbitOuter}`}>
+            <span className={`${styles.dot} ${styles.dotOne}`} />
+          </div>
+          <div className={`${styles.orbit} ${styles.orbitMid}`}>
+            <span className={`${styles.dot} ${styles.dotTwo}`} />
+          </div>
+          <div className={`${styles.orbit} ${styles.orbitInner}`}>
+            <span className={`${styles.dot} ${styles.dotThree}`} />
+          </div>
 
           <div className={styles.floatingCards}>
             {floatingCards.map((card, index) => {
