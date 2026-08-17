@@ -1,95 +1,132 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { EnquiryProvider } from '../../enquiry/EnquiryProvider'
-import { Contact } from '../Contact/Contact'
+import { site } from '../../data/site'
 import { ChatAgent } from './ChatAgent'
+import { topics } from './script'
 
-function renderPair() {
-  return render(
-    <EnquiryProvider>
-      <ChatAgent />
-      <Contact />
-    </EnquiryProvider>,
-  )
+function mockFetch(response: Partial<Response> = {}) {
+  const fn = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}), ...response })
+  vi.stubGlobal('fetch', fn)
+  return fn
 }
 
-/** Walks Kris from the launcher to the lead-capture step. */
-async function qualify(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: 'Chat with Kris' }))
-  await user.click(screen.getByRole('button', { name: 'Networking' }))
-  await user.click(screen.getByRole('button', { name: 'Multiple branches' }))
-  await user.click(screen.getByRole('button', { name: 'Within a month' }))
+/**
+ * Kris asks a random number of follow-ups, so the test walks the flow by
+ * reacting to whatever is on screen rather than assuming a fixed script.
+ */
+async function walkToName(user: ReturnType<typeof userEvent.setup>, topicLabel = 'Networking') {
+  await user.click(screen.getByRole('button', { name: 'Work with us' }))
+  await user.click(screen.getByRole('button', { name: topicLabel }))
+
+  /*
+   * Always answer the newest question. AnimatePresence keeps the outgoing
+   * group mounted for a beat, so picking the first match on the page can hit a
+   * button that is already on its way out.
+   */
+  for (let guard = 0; guard < 10; guard += 1) {
+    if (screen.queryByPlaceholderText('Your name')) return
+    const groups = document.querySelectorAll<HTMLElement>('[class*="options"]')
+    const newest = groups[groups.length - 1]
+    const next = newest?.querySelector('button')
+    if (!next) break
+    await user.click(next)
+  }
+  throw new Error('Never reached the name step')
 }
 
 describe('<ChatAgent />', () => {
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }))
-    // jsdom has no smooth scrolling.
-    Element.prototype.scrollIntoView = vi.fn()
-    window.requestAnimationFrame = ((cb: FrameRequestCallback) => {
-      cb(0)
-      return 0
-    }) as typeof window.requestAnimationFrame
+    mockFetch()
+    vi.spyOn(Math, 'random').mockReturnValue(0.5)
   })
 
-  it('walks through the branching flow one step at a time', async () => {
-    const user = userEvent.setup()
-    renderPair()
-
-    await user.click(screen.getByRole('button', { name: 'Chat with Kris' }))
-    expect(screen.getByText(/what can we help with/i)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Networking' }))
-    expect(screen.getByText(/what is the site like/i)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Multiple branches' }))
-    expect(screen.getByText(/how soon do you need this/i)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Within a month' }))
-    expect(screen.getByLabelText('Your name')).toBeInTheDocument()
+  it('opens from a launcher labelled for partnership, not support', () => {
+    render(<ChatAgent />)
+    expect(screen.getByRole('button', { name: 'Work with us' })).toBeInTheDocument()
   })
 
-  it('lets the visitor step back without losing the flow', async () => {
+  it('asks for the name and the email in separate turns', async () => {
     const user = userEvent.setup()
-    renderPair()
-    await qualify(user)
+    render(<ChatAgent />)
+    await walkToName(user)
 
-    await user.click(screen.getByRole('button', { name: /back/i }))
-    expect(screen.getByText(/how soon do you need this/i)).toBeInTheDocument()
+    // Name is asked first, on its own.
+    expect(screen.getByPlaceholderText('Your name')).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('you@company.com')).not.toBeInTheDocument()
+
+    await user.type(screen.getByPlaceholderText('Your name'), 'Jane Doe')
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+
+    // Only then does the email step appear, and the name step retires.
+    expect(await screen.findByPlaceholderText('you@company.com')).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.queryByPlaceholderText('Your name')).not.toBeInTheDocument(),
+    )
   })
 
-  it('refuses to hand off an invalid email', async () => {
+  it('will not advance past an empty name', async () => {
     const user = userEvent.setup()
-    renderPair()
-    await qualify(user)
+    render(<ChatAgent />)
+    await walkToName(user)
 
-    await user.type(screen.getByLabelText('Your name'), 'Jane Doe')
-    await user.type(screen.getByLabelText('Email', { exact: true }), 'nope')
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    expect(await screen.findByRole('alert')).toHaveTextContent(/name/i)
+    expect(screen.queryByPlaceholderText('you@company.com')).not.toBeInTheDocument()
+  })
+
+  it('emails the enquiry directly instead of filling a form', async () => {
+    const user = userEvent.setup()
+    render(<ChatAgent />)
+    await walkToName(user)
+
+    await user.type(screen.getByPlaceholderText('Your name'), 'Jane Doe')
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.type(screen.getByPlaceholderText('you@company.com'), 'jane@company.com')
     await user.click(screen.getByRole('button', { name: /send to the team/i }))
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/valid email/i)
-    expect(screen.getByLabelText(/full name/i)).toHaveValue('')
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1))
+    const [url, init] = vi.mocked(fetch).mock.calls[0]!
+    expect(url).toBe(site.formspreeEndpoint)
+
+    const body = JSON.parse(String(init?.body)) as Record<string, string>
+    expect(body.name).toBe('Jane Doe')
+    expect(body.email).toBe('jane@company.com')
+    expect(body.source).toBe('Kris chat')
+    const networking = topics.find((topic) => topic.label === 'Networking')
+    expect(body.service).toBe(networking?.service)
+    expect(body.message).toContain('Timeline:')
+
+    expect(await screen.findByText(/sent\./i)).toBeInTheDocument()
   })
 
-  it('pre-fills the contact form with the qualified enquiry', async () => {
+  it('rejects a malformed email without calling the network', async () => {
     const user = userEvent.setup()
-    renderPair()
-    await qualify(user)
+    render(<ChatAgent />)
+    await walkToName(user)
 
-    await user.type(screen.getByLabelText('Your name'), 'Jane Doe')
-    await user.type(screen.getByLabelText('Email', { exact: true }), 'jane@company.com')
+    await user.type(screen.getByPlaceholderText('Your name'), 'Jane Doe')
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.type(screen.getByPlaceholderText('you@company.com'), 'nope')
     await user.click(screen.getByRole('button', { name: /send to the team/i }))
 
-    await waitFor(() => {
-      expect(screen.getByLabelText(/full name/i)).toHaveValue('Jane Doe')
-    })
-    expect(screen.getByLabelText(/email address/i)).toHaveValue('jane@company.com')
-    expect(screen.getByLabelText(/service interest/i)).toHaveValue('Networking & Infrastructure')
-    const message = screen.getByLabelText(/^message$/i) as HTMLTextAreaElement
-    expect(message.value).toContain('Networking & Infrastructure')
-    expect(message.value).toContain('Multiple branches')
-    expect(message.value).toContain('within a month')
-    expect(Element.prototype.scrollIntoView).toHaveBeenCalled()
+    expect(await screen.findByRole('alert')).toHaveTextContent(/email/i)
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('keeps the visitor on the email step when sending fails', async () => {
+    mockFetch({ ok: false, json: async () => ({ errors: [{ message: 'Form is disabled' }] }) })
+    const user = userEvent.setup()
+    render(<ChatAgent />)
+    await walkToName(user)
+
+    await user.type(screen.getByPlaceholderText('Your name'), 'Jane Doe')
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.type(screen.getByPlaceholderText('you@company.com'), 'jane@company.com')
+    await user.click(screen.getByRole('button', { name: /send to the team/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/form is disabled/i)
+    // Their answers survive so they can retry rather than start over.
+    expect(screen.getByPlaceholderText('you@company.com')).toHaveValue('jane@company.com')
   })
 })

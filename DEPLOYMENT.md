@@ -90,8 +90,22 @@ serve.
 curl -sI https://<your-domain> | head -n 12
 ```
 
-Expect `HTTP/2 200`, and `x-robots-tag: all` (production re-enables indexing;
-previews stay `noindex`).
+Expect `HTTP/2 200` and the security headers.
+
+Then confirm indexing is the right way round. Netlify sends `X-Robots-Tag:
+noindex` on previews and branch deploys automatically, and `netlify.toml`
+deliberately sets no robots header of its own, so:
+
+```bash
+# Live domain: must print NOTHING.
+curl -sI https://<your-domain> | grep -i x-robots-tag
+
+# Staging: must print noindex.
+curl -sI https://main--<site>.netlify.app | grep -i x-robots-tag
+```
+
+If the live domain prints `noindex`, stop and fix it before announcing the
+site: Google will drop it from the index.
 
 ---
 

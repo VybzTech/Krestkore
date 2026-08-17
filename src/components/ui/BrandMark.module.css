@@ -1,0 +1,29 @@
+/*
+ * The supplied logo is a single flat colour, so it is applied as a CSS mask
+ * over a coloured box rather than inlined as JSX. Two reasons:
+ *
+ *  - Theming. An <img> cannot be recoloured; a mask takes its colour from
+ *    `background-color`, so the mark follows the theme token exactly.
+ *  - Weight. The source SVG is ~50KB of path data. As a mask it stays a
+ *    separate cached file instead of being parsed into the JS bundle and
+ *    re-rendered into the DOM at every place the logo appears.
+ */
+.mark {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: var(--logo-ink);
+  -webkit-mask-image: url('/assets/brand/logo-icon.svg');
+  mask-image: url('/assets/brand/logo-icon.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: background-color var(--dur-mid) var(--ease-out-quart);
+}
+
+/* Lets a caller paint the mark with something other than the logo token. */
+.inherit {
+  background-color: currentColor;
+}

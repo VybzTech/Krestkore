@@ -95,12 +95,14 @@ textarea {
 }
 
 /*
- * Gradient treatment for the accent half of a section heading.
+ * Gradient treatment for the accent half of a section heading. Runs vertically:
+ * brand teal at the cap line, deepening toward the baseline.
  *
  * Built to fail safe: the solid colour is set first and always applies, the
  * clip is only engaged where supported, and forced-colours mode drops back to
- * system colours. Both gradient stops independently clear 4.5:1 against --bg,
- * so legibility does not depend on where in the ramp a glyph falls.
+ * system colours. Both gradient stops independently clear the AA threshold
+ * against --bg, so legibility does not depend on where in the ramp a glyph
+ * falls.
  */
 .gradientText {
   color: var(--accent-ink);
@@ -108,12 +110,21 @@ textarea {
 
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .gradientText {
-    background-image: linear-gradient(100deg, var(--grad-from) 0%, var(--grad-to) 92%);
+    background-image: linear-gradient(180deg, var(--grad-from) 0%, var(--grad-to) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* Descenders get clipped without a little breathing room. */
-    padding-bottom: 0.08em;
+
+    /*
+     * background-clip:text paints only inside the element's content box, and
+     * Syne's caps and descenders overflow that box at display sizes with tight
+     * leading. Anything outside simply receives no paint, so the glyphs render
+     * visibly shorter than the plain lines beside them. The padding grows the
+     * paint area; the equal negative margin cancels its effect on layout, so
+     * spacing is unchanged.
+     */
+    padding-block: 0.2em;
+    margin-block: -0.2em;
   }
 }
 

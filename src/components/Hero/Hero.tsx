@@ -1,9 +1,13 @@
+import { motion } from 'framer-motion'
 import { ArrowRight, ChartLine, HardDrive, Lock, Network, type LucideIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { BrandMark } from '../ui/BrandMark'
+import { revealItem, revealScale, revealStagger } from '../../motion/presets'
 import styles from './Hero.module.css'
 
 const stats = [
   { value: '1+', label: 'Years Active' },
-  { value: '10+', label: 'Clients Served' },
+  { value: '5+', label: 'Clients Served' },
   { value: '100%', label: 'Commitment' },
 ] as const
 
@@ -23,66 +27,78 @@ export function Hero() {
       <div className={styles.scanLine} aria-hidden="true" />
 
       <div className={`container ${styles.inner}`}>
-        <div className={styles.copy}>
-          <span className="sectionLabel">Lagos · Nigeria</span>
+        <motion.div
+          className={styles.copy}
+          variants={revealStagger}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.span className="sectionLabel" variants={revealItem}>
+            Lagos · Nigeria
+          </motion.span>
           <h1 className={styles.title}>
-            <span className={styles.line}>Empowering</span>
-            <span className={`${styles.line} ${styles.accent} gradientText`}>Tomorrow</span>
-            <span className={styles.line}>Through Innovation</span>
+            <motion.span className={styles.line} variants={revealItem}>
+              Empowering
+            </motion.span>
+            <motion.span
+              className={`${styles.line} ${styles.accent} gradientText`}
+              variants={revealItem}
+            >
+              Tomorrow
+            </motion.span>
+            <motion.span className={styles.line} variants={revealItem}>
+              Through Innovation
+            </motion.span>
           </h1>
-          <p className={styles.sub}>
+          <motion.p className={styles.sub} variants={revealItem}>
             Krestkore Solutions is the digital backbone organisations trust, from hardware
             procurement to custom software, data intelligence, and enterprise networking.
-          </p>
+          </motion.p>
 
-          <div className={styles.actions}>
-            <a href="#contact" className={styles.btnPrimary}>
+          <motion.div className={styles.actions} variants={revealItem}>
+            <Link to="/#contact" className={styles.btnPrimary}>
               Start a conversation
               <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-            </a>
-            <a href="#services" className={styles.btnGhost}>
+            </Link>
+            <Link to="/#services" className={styles.btnGhost}>
               Explore solutions
-            </a>
-          </div>
+            </Link>
+          </motion.div>
 
           {/* Term is the label, description is the figure. CSS flips them
               visually so the number still reads first. */}
-          <dl className={styles.stats}>
+          <motion.dl className={styles.stats} variants={revealStagger}>
             {stats.map((stat) => (
-              <div className={styles.stat} key={stat.label}>
+              <motion.div className={styles.stat} key={stat.label} variants={revealScale}>
                 <dt className={styles.statLabel}>{stat.label}</dt>
                 <dd className={styles.statValue}>{stat.value}</dd>
-              </div>
+              </motion.div>
             ))}
-          </dl>
-        </div>
+          </motion.dl>
+        </motion.div>
 
         <div className={styles.visual} aria-hidden="true">
           <div className={`${styles.ring} ${styles.ringOuter}`} />
           <div className={`${styles.ring} ${styles.ringMid}`} />
           <div className={`${styles.ring} ${styles.ringInner}`} />
           <div className={styles.core}>
-            <svg viewBox="0 0 80 80" fill="none" className={styles.coreIcon} focusable="false">
-              <path
-                d="M16 16L40 40L16 64"
-                stroke="var(--accent)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M32 16L56 40L32 64"
-                stroke="currentColor"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.5"
-              />
-            </svg>
+            <BrandMark size={58} className={styles.coreIcon} />
           </div>
-          <div className={`${styles.dot} ${styles.dotOne}`} />
-          <div className={`${styles.dot} ${styles.dotTwo}`} />
-          <div className={`${styles.dot} ${styles.dotThree}`} />
+
+          {/*
+            Each dot sits at the end of a zero-size arm pinned to the centre.
+            Rotating the arm sweeps the dot around its ring, so the orbit
+            radius is set by the dot's offset and the direction by the arm.
+          */}
+          <div className={`${styles.orbit} ${styles.orbitOuter}`}>
+            <span className={`${styles.dot} ${styles.dotOne}`} />
+          </div>
+          <div className={`${styles.orbit} ${styles.orbitMid}`}>
+            <span className={`${styles.dot} ${styles.dotTwo}`} />
+          </div>
+          <div className={`${styles.orbit} ${styles.orbitInner}`}>
+            <span className={`${styles.dot} ${styles.dotThree}`} />
+          </div>
 
           <div className={styles.floatingCards}>
             {floatingCards.map((card, index) => {

@@ -1,12 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { navLinks, site } from '../../data/site'
 import { BrandMark } from '../ui/BrandMark'
 import { ThemeToggle } from '../ui/ThemeToggle'
 import styles from './Navbar.module.css'
 
-const SECTION_IDS = ['services', 'about', 'testimonials', 'contact'] as const
+const SECTION_IDS = ['services', 'partners', 'about', 'contact'] as const
+
+/** '/#services' -> 'services'; '/privacy' -> null. */
+function hashOf(href: string): string | null {
+  const index = href.indexOf('#')
+  return index === -1 ? null : href.slice(index + 1)
+}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -140,21 +147,21 @@ export function Navbar() {
         <ul className={styles.drawerLinks}>
           {navLinks.map((link, index) => (
             <li key={link.href} style={{ '--i': index } as React.CSSProperties}>
-              <a
-                href={link.href}
+              <Link
+                to={link.href}
                 onClick={closeMenu}
-                aria-current={activeSection === link.href.slice(1) ? 'true' : undefined}
+                aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         <div className={styles.drawerFoot}>
-          <a href="#contact" className={styles.drawerCta} onClick={closeMenu}>
+          <Link to="/#contact" className={styles.drawerCta} onClick={closeMenu}>
             Get Started
-          </a>
+          </Link>
           <div className={styles.drawerTheme}>
             <span>Appearance</span>
             <ThemeToggle />
@@ -168,30 +175,30 @@ export function Navbar() {
     <>
       <header className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
         <nav className={`${styles.inner} container`} aria-label="Primary">
-          <a href="#home" className={styles.brand} aria-label={`${site.shortName} home`}>
+          <Link to="/" className={styles.brand} aria-label={`${site.shortName} home`}>
             <BrandMark size={36} />
             <span className={styles.brandName}>
               Krest<strong>kore</strong>
             </span>
-          </a>
+          </Link>
 
           {/* Links and the theme toggle travel together, pinned right. */}
           <div className={styles.cluster}>
             <ul className={styles.links}>
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    aria-current={activeSection === link.href.slice(1) ? 'true' : undefined}
+                  <Link
+                    to={link.href}
+                    aria-current={activeSection === hashOf(link.href) ? 'true' : undefined}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
               <li>
-                <a href="#contact" className={styles.cta}>
+                <Link to="/#contact" className={styles.cta}>
                   Get Started
-                </a>
+                </Link>
               </li>
             </ul>
 

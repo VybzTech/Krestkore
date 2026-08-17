@@ -85,18 +85,7 @@
 
 .title .line {
   display: block;
-  animation: fadeUp 0.8s var(--ease-out-expo) both;
 }
-.title .line:nth-child(1) {
-  animation-delay: 0.15s;
-}
-.title .line:nth-child(2) {
-  animation-delay: 0.25s;
-}
-.title .line:nth-child(3) {
-  animation-delay: 0.35s;
-}
-
 .accent {
   color: var(--accent-ink);
 }
@@ -107,7 +96,6 @@
   color: var(--muted);
   max-width: 52ch;
   margin-bottom: 2.4rem;
-  animation: fadeUp 0.8s var(--ease-out-expo) 0.45s both;
 }
 
 .actions {
@@ -116,7 +104,6 @@
   gap: 1.4rem;
   flex-wrap: wrap;
   margin-bottom: 3rem;
-  animation: fadeUp 0.8s var(--ease-out-expo) 0.55s both;
 }
 
 .btnPrimary {
@@ -168,7 +155,6 @@
   display: flex;
   gap: 2.5rem;
   flex-wrap: wrap;
-  animation: fadeUp 0.8s var(--ease-out-expo) 0.65s both;
 }
 
 .stat {
@@ -251,8 +237,39 @@
 }
 
 .coreIcon {
-  width: 56px;
-  height: 56px;
+  /* Inside the core the mark sits on the surface fill, so it always uses the
+     brand accent rather than the light-theme navy. */
+  background-color: var(--accent);
+}
+
+/*
+ * Orbit arms. Zero-size boxes pinned to the centre of the visual; rotating one
+ * carries its dot around a circle. Counter-rotation between the outer and mid
+ * arms makes the two bright dots converge and separate on a slow cycle, which
+ * reads as a sequence rather than two unrelated loops.
+ */
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  animation: spinSlow linear infinite;
+}
+
+/* Clockwise. */
+.orbitOuter {
+  animation-duration: 22s;
+}
+
+/* Anti-clockwise, and slightly out of step so they do not simply mirror. */
+.orbitMid {
+  animation-duration: 17s;
+  animation-direction: reverse;
+}
+
+.orbitInner {
+  animation-duration: 29s;
 }
 
 .dot {
@@ -261,19 +278,26 @@
   height: 10px;
   background: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
-  top: 50%;
-  left: 50%;
+  box-shadow: 0 0 12px var(--accent);
+  /* The offset is the orbit radius; translate(-50%,-50%) centres the dot on
+     the arm's endpoint so it does not wobble as the arm turns. */
+  left: 0;
+  top: 0;
 }
+
 .dotOne {
-  transform: translate(-50%, -190px);
+  transform: translate(-50%, -50%) translateY(-190px);
 }
+
 .dotTwo {
-  transform: translate(135px, 60px);
+  transform: translate(-50%, -50%) translateY(-140px);
 }
+
 .dotThree {
-  transform: translate(-135px, 60px);
+  transform: translate(-50%, -50%) translateY(90px);
   opacity: 0.5;
+  width: 8px;
+  height: 8px;
 }
 
 .floatingCards {

@@ -2,7 +2,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.2rem;
   padding: 0.28rem;
   background: color-mix(in srgb, var(--surface) 70%, transparent);
   border: 1px solid var(--border);
@@ -32,7 +32,7 @@
 }
 
 .toggle[data-theme='light'] .thumb {
-  transform: translateX(31px);
+  transform: translateX(32px);
 }
 
 .slot {

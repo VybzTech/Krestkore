@@ -35,9 +35,10 @@
   --text-display-md: clamp(1.75rem, 6.5vw, 3rem);
   --text-display-lg: clamp(2rem, 8.5vw, 4.2rem);
 
-  --radius-sm: 5px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* Buttons use --radius-sm; nudged up from 5px for a slightly softer edge. */
+  --radius-sm: 9px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --radius-pill: 999px;
 
   --space-1: 0.3rem;
@@ -89,8 +90,6 @@
 
   --glow-soft: rgb(var(--accent-rgb) / 0.18);
   --grid-line: rgb(var(--accent-rgb) / 0.04);
-  --orb-accent: rgb(var(--accent-rgb) / 0.12);
-  --orb-deep: rgb(10 31 68 / 0.8);
 
   --shadow-sm: 0 4px 16px rgb(0 0 0 / 0.3);
   --shadow-md: 0 8px 32px rgb(var(--accent-rgb) / 0.3);
@@ -100,6 +99,9 @@
   --scrim: rgb(6 14 30 / 0.9);
   --star: #14b8a6;
 
+  /* Logo ink: brand teal on dark, deep navy on light. */
+  --logo-ink: var(--accent);
+
   --danger-bg: rgb(239 68 68 / 0.1);
   --danger-border: rgb(239 68 68 / 0.4);
   --danger-text: #fca5a5;
@@ -108,10 +110,10 @@
   --aurora-deep: rgb(22 62 132 / 0.34);
   --aurora-veil: rgb(6 14 30 / 0.55);
 
-  /* Heading gradient. Both stops clear 4.5:1 on --bg independently, so the
-     text stays legible wherever the ramp lands. */
-  --grad-from: #2ee6cf;
-  --grad-to: #0f8f9a;
+  /* Heading gradient, top to bottom. Measured on --bg: 12.5:1 and 4.5:1, so
+     the text stays legible wherever in the ramp a glyph falls. */
+  --grad-from: #35f0d8;
+  --grad-to: #0f8f85;
 }
 
 /* ── Light: same hue family, re-tuned for a bright surface ───────────── */
@@ -146,8 +148,6 @@
 
   --glow-soft: rgb(var(--accent-rgb) / 0.1);
   --grid-line: rgb(var(--accent-rgb) / 0.06);
-  --orb-accent: rgb(var(--accent-rgb) / 0.1);
-  --orb-deep: rgb(148 178 214 / 0.35);
 
   --shadow-sm: 0 4px 16px rgb(10 31 68 / 0.08);
   --shadow-md: 0 8px 32px rgb(10 31 68 / 0.1);
@@ -156,6 +156,8 @@
 
   --scrim: rgb(244 247 251 / 0.88);
   --star: #0d9488;
+
+  --logo-ink: var(--brand-navy);
 
   /* Darkened so error text clears 4.5:1 on the light surface. */
   --danger-bg: rgb(220 38 38 / 0.07);
@@ -166,7 +168,7 @@
   --aurora-deep: rgb(126 170 226 / 0.34);
   --aurora-veil: rgb(244 247 251 / 0.5);
 
-  /* Both stops measured against --bg (#f4f7fb): 4.9:1 and 5.9:1. */
+  /* Top to bottom, measured against --bg (#f4f7fb): 4.7:1 and 10.9:1. */
   --grad-from: #0a7d72;
-  --grad-to: #115e73;
+  --grad-to: #0a3d4d;
 }

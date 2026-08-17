@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { servicePages } from '../../data/servicePages'
 import { site } from '../../data/site'
 import { socials } from '../../data/socials'
 import { BrandMark } from '../ui/BrandMark'
@@ -7,37 +9,62 @@ import styles from './Footer.module.css'
 interface FooterLink {
   label: string
   href: string
+  /** Internal router links use <Link>; everything else is a plain anchor. */
+  internal?: boolean
   external?: boolean
 }
 
 const columns: readonly { title: string; items: readonly FooterLink[] }[] = [
   {
     title: 'Services',
-    items: [
-      { label: 'Hardware & Infrastructure', href: '#services' },
-      { label: 'Networking', href: '#services' },
-      { label: 'Software Development', href: '#services' },
-      { label: 'Security Systems', href: '#services' },
-    ],
+    items: servicePages.map((page) => ({
+      label: page.title,
+      href: `/services/${page.slug}`,
+      internal: true,
+    })),
   },
   {
     title: 'Company',
     items: [
-      { label: 'About Us', href: '#about' },
-      { label: 'The Tribe', href: '#about' },
-      { label: 'Our Edge', href: '#edge' },
-      { label: 'Contact', href: '#contact' },
+      { label: 'About Us', href: '/#about', internal: true },
+      { label: 'The Tribe', href: '/#about', internal: true },
+      { label: 'Our Edge', href: '/#edge', internal: true },
+      { label: 'Partners', href: '/#partners', internal: true },
+      { label: 'Contact', href: '/#contact', internal: true },
     ],
   },
   {
     title: 'Connect',
     items: [
-      { label: 'Email us', href: `mailto:${site.email}`, external: true },
-      { label: 'Call us', href: `tel:${site.phoneHref}`, external: true },
-      ...socials.map((social) => ({ label: social.name, href: social.url, external: true })),
+      { label: 'Email us', href: `mailto:${site.email}` },
+      { label: 'Call us', href: `tel:${site.phoneHref}` },
+      ...socials.map((social) => ({
+        label: social.name,
+        href: social.url,
+        external: true,
+      })),
     ],
   },
 ]
+
+const legalLinks: readonly FooterLink[] = [
+  { label: 'Privacy Policy', href: '/privacy', internal: true },
+  { label: 'Terms of Service', href: '/terms', internal: true },
+]
+
+function FooterAnchor({ link }: { link: FooterLink }) {
+  if (link.internal) {
+    return <Link to={link.href}>{link.label}</Link>
+  }
+  return (
+    <a
+      href={link.href}
+      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      {link.label}
+    </a>
+  )
+}
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -47,16 +74,20 @@ export function Footer() {
       <div className="container">
         <div className={styles.top}>
           <div>
-            <a href="#home" className={styles.brand} aria-label={`${site.shortName} home`}>
+            <Link to="/" className={styles.brand} aria-label={`${site.shortName} home`}>
               <BrandMark size={30} />
               <span className={styles.brandName}>
                 Krest<strong>kore</strong>
               </span>
-            </a>
+            </Link>
             <p className={styles.tagline}>{site.tagline}</p>
-            <p className={styles.sub}>
-              {site.location} · {site.handle}
-            </p>
+            <address className={styles.address}>
+              {site.address.line1}
+              <br />
+              {site.address.line2}
+              <br />
+              {site.address.city}
+            </address>
             <div className={styles.socialIcons}>
               {socials.map((social) => (
                 <a
@@ -74,19 +105,16 @@ export function Footer() {
           </div>
 
           {columns.map((column) => (
-            <nav className={styles.column} key={column.title} aria-labelledby={`footer-${column.title}`}>
+            <nav
+              className={styles.column}
+              key={column.title}
+              aria-labelledby={`footer-${column.title}`}
+            >
               <h3 id={`footer-${column.title}`}>{column.title}</h3>
               <ul>
                 {column.items.map((link) => (
                   <li key={`${column.title}-${link.label}`}>
-                    <a
-                      href={link.href}
-                      {...(link.external && link.href.startsWith('http')
-                        ? { target: '_blank', rel: 'noopener noreferrer' }
-                        : {})}
-                    >
-                      {link.label}
-                    </a>
+                    <FooterAnchor link={link} />
                   </li>
                 ))}
               </ul>
@@ -98,7 +126,13 @@ export function Footer() {
           <p>
             &copy; {year} {site.name}. All rights reserved.
           </p>
-          <p className={styles.builtWith}>Built with precision. Delivered with purpose.</p>
+          <nav className={styles.legal} aria-label="Legal">
+            {legalLinks.map((link) => (
+              <Link to={link.href} key={link.href}>
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

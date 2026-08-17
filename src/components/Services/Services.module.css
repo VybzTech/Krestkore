@@ -45,29 +45,51 @@
 
 .card {
   background: var(--bg);
-  padding: 2.4rem;
+  /* Extra bottom room so the hover "Learn more" does not crowd the list. */
+  padding: 2.4rem 2.4rem 4rem;
   position: relative;
   overflow: hidden;
   transition: background 0.3s var(--ease-out-quart);
 }
 
-/*
- * The card surface always paints, so an un-revealed grid reads as an empty
- * card grid rather than a solid slab of the grid's hairline colour. Only the
- * contents fade up. `--reveal-delay` is set per card and inherits down.
- */
-.cardHeader,
-.cardTitle,
-.desc,
-.items {
-  opacity: 0;
+/* Card entrance is handled by framer-motion variants in Services.tsx. */
+
+.cardLink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 2.4rem;
+  text-decoration: none;
+  border-radius: inherit;
 }
 
-.revealed .cardHeader,
-.revealed .cardTitle,
-.revealed .desc,
-.revealed .items {
-  animation: fadeUp var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0s) both;
+.cardLinkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--accent-ink);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-fast) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.card:hover .cardLinkLabel,
+.cardLink:focus-visible .cardLinkLabel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cardLinkLabel svg {
+  transition: transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.card:hover .cardLinkLabel svg {
+  transform: translateX(3px);
 }
 
 .card:hover,
