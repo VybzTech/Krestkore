@@ -36,3 +36,6 @@ angular-legacy/.angular/
 angular-legacy/dist/
 angular-legacy/**
 angular-legacy
+
+design/**
+design/
