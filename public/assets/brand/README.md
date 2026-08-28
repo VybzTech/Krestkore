@@ -39,6 +39,19 @@ state for all five partners.
 
 ## Favicons
 
-The existing favicons in `public/assets/` were generated from the chevron by
-the Python scripts in `angular-legacy/src/assets/`. If the logo changes, those
-need regenerating; they are not derived from `logo.svg` at build time.
+All favicons are generated from `logo-icon.svg`, so they cannot drift from the
+brand mark. After changing the logo, run:
+
+```bash
+npm run favicons
+```
+
+That rewrites `public/favicon.ico` (16/32/48), `public/assets/favicon.svg`, the
+32/192/512 PNGs and the 180px Apple touch icon. It renders through a real
+browser, which is why it replaced the old Pillow scripts in `angular-legacy`:
+those drew the chevron by hand and could not read an SVG at all.
+
+Icons at 48px and below drop the decorative ring and use a larger mark, because
+at tab size the ring turns to mush and the glyph needs more of the disc to stay
+readable. The mark sits on a navy disc rather than transparency so it holds up
+against both light and dark browser chrome.

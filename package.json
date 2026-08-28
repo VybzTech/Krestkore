@@ -11,7 +11,8 @@
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "design-check": "node scripts/design-check.mjs"
+    "design-check": "node scripts/design-check.mjs",
+    "favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.0",
